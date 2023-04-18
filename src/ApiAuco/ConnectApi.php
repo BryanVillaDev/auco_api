@@ -1,6 +1,7 @@
 <?php
 namespace ApiAuco;
 
+require 'config.php';
 class ConnectApi
 {
 
