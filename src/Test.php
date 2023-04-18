@@ -1,6 +1,6 @@
 <?php
 require_once 'ApiAuco/ConnectApi.php';
-require_once 'ApiAuco/config.php';
+require_once 'ApiAuco/config.php'; # this files is optional contains the defined varibles
 use ApiAuco\ConnectApi;
 
 
