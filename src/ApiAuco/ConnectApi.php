@@ -20,7 +20,7 @@ class ConnectApi
     {
         $ch = curl_init();
         $data_string = json_encode($data);
-        curl_setopt($ch, CURLOPT_URL, $this->url . '/document/');
+        curl_setopt($ch, CURLOPT_URL, $this->url . '/document/upload');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
