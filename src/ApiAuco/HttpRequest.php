@@ -6,36 +6,57 @@ use Exception;
 
 class HttpRequest implements RequestInterface
 {
-    private $ch;
     private array $headers = [];
-    private string $body;
+    private $body;
+    private $url;
+    private $method;
 
     public function __construct(string $method, string $url) {
-        $this->ch = curl_init($url);
-        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        $this->url = $url;
+        $this->method = $method;
     }
 
     public function headers(string $header, string $value): void {
         $this->headers[] = $header . ': ' . $value;
     }
 
-    public function body(string $body): void {
+    public function body($body): void {
         $this->body = $body;
     }
 
     public function send(): array {
+        $ch = curl_init($this->url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         if (!empty($this->headers)) {
-            curl_setopt($this->ch, CURLOPT_HTTPHEADER, $this->headers);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
         }
         if (!empty($this->body)) {
-            curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->body);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $this->body);
         }
-        $response = curl_exec($this->ch);
-        $error = curl_error($this->ch);
-        $httpCode = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
-        curl_close($this->ch);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        return [
+            'statusCode' => $httpCode,
+            'response' => json_decode($response, true)
+        ];
+    }
+    public function sendBinaryFile(): array{
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $this->url,
+            CURLOPT_CUSTOMREQUEST => $this->method,
+            CURLOPT_HEADER => true,
+            CURLOPT_POST => 1,
+            CURLOPT_HTTPHEADER => $this->headers,
+            CURLOPT_POSTFIELDS => $this->body,
+            CURLOPT_RETURNTRANSFER => true
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
         return [
             'statusCode' => $httpCode,
             'response' => json_decode($response, true)

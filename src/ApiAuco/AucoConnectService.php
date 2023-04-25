@@ -2,6 +2,8 @@
 
 namespace ApiAuco;
 
+use CURLFile;
+
 class AucoConnectService
 {
     private $privateKey;
@@ -49,18 +51,23 @@ class AucoConnectService
             'files' => $newDocumentToSend
         ];
     }
-    public function uploadMany(array $data){
+    public function uploadMany(array $data): array{
         $toSend = $this->cleanPayload($data);
         $response = $this->requestAucoPost($toSend['payload'], '/document/many');
+        $returnClient = [];
         if ($response['statusCode'] == 200){
             $clientAws =  new HttpClientApi('');
             foreach ($response['response'] as $key => $item) {
                 $clientPut = $clientAws->put($item['url']);
-                $clientPut->body($toSend['files'][$key]);
-                $response = $clientPut->send();
+                $clientPut->headers('Content-Type', 'application/pdf');
+                $clientPut->body(file_get_contents($toSend['files'][$key]));
+                $responseBinary = $clientPut->sendBinaryFile();
+                if($responseBinary['statusCode'] == 200){
+                    $returnClient[] = $item['code'];
+                }
             }
         }
-        return $response;
+        return $returnClient;
     }
 
     public function get($documentCode){

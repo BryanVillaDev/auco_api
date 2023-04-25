@@ -22,7 +22,7 @@ $data = array(
     'documents' => [
         [
             "name" => "Documento1",
-            'file' => $ApiAuco->base64EncodeFile('E:\Brayan Villalobos\auco_api\src\Test.pdf'),
+            'file' => 'E:\Brayan Villalobos\auco_api\src\Test.pdf',
             'signProfile' => [
                 [
                     "name" => "Evelyn1",
@@ -33,7 +33,7 @@ $data = array(
         ],
         [
             "name" => "Documento2",
-            'file' => $ApiAuco->base64EncodeFile('E:\Brayan Villalobos\auco_api\src\Test.pdf'),
+            'file' => 'E:\Brayan Villalobos\auco_api\src\Test.pdf',
             'signProfile' => [
                 [
                     "name" => "Evelyn2",
