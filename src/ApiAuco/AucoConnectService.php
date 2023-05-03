@@ -2,7 +2,8 @@
 
 namespace ApiAuco;
 
-use CURLFile;
+use utils\JsonFileManager;
+use utils\JsonEncryptor;
 
 class AucoConnectService
 {
@@ -75,4 +76,17 @@ class AucoConnectService
         $clientGet->headers('Authorization', $this->publicKey);
         return $clientGet->send();
     }
+    
+    public function webHookPost($data){
+        $encryptor = new JsonEncryptor(key_encrypt);
+        $encrypted_data = $encryptor->encrypt($data);
+        $managerFile = new JsonFileManager('C:\xampp\htdocs\auco_api\src\jsonFiles\\'.rand(0,10).'.json');
+        $managerFile->write([
+            'data' => $encrypted_data
+        ]);
+
+        $dataInFile = $managerFile->read();
+        return $encryptor->decrypt($dataInFile['data']);
+    }
+    
 }
