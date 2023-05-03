@@ -2,7 +2,7 @@
 
 namespace ApiAuco;
 
-use CURLFile;
+use utils\JsonEncryptor;
 
 class AucoConnectService
 {
@@ -75,4 +75,10 @@ class AucoConnectService
         $clientGet->headers('Authorization', $this->publicKey);
         return $clientGet->send();
     }
+    
+    public function webHookPost($data){
+        $encryptor = new JsonEncryptor(key_encrypt);
+        $encrypted_data = $encryptor->encrypt($data);
+    }
+    
 }
