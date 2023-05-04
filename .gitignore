@@ -1,2 +1,3 @@
 .idea
 src/ApiAuco/config.php
+src/jsonFiles/*
