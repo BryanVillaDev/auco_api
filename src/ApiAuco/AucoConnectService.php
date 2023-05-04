@@ -80,7 +80,7 @@ class AucoConnectService
     public function webHookPost($data){
         $encryptor = new JsonEncryptor(key_encrypt);
         $encrypted_data = $encryptor->encrypt($data);
-        $managerFile = new JsonFileManager('C:\xampp\htdocs\auco_api\src\jsonFiles\\'.rand(0,10).'.json');
+        $managerFile = new JsonFileManager(route_json.time().'.json');
         $managerFile->write([
             'data' => $encrypted_data
         ]);
