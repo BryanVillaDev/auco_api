@@ -12,5 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     echo $apiAuco->webHookPost(json_encode($data));
 }else{
-    echo __DIR__."Method not allowed";
+    header("HTTP/1.1 401 Unauthorized");
+    exit;
 }
